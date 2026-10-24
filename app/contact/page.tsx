@@ -8,6 +8,8 @@ type FieldErrors = {
   email?: string;
   serviceAddress?: string;
   service?: string;
+  urgency?: string;
+  preferredContact?: string;
   message?: string;
 };
 
@@ -45,6 +47,10 @@ export default function ContactPage() {
       formData.get("serviceAddress") ?? ""
     ).trim();
     const service = String(formData.get("service") ?? "").trim();
+    const urgency = String(formData.get("urgency") ?? "").trim();
+    const preferredContact = String(
+      formData.get("preferredContact") ?? ""
+    ).trim();
     const message = String(formData.get("message") ?? "").trim();
 
     const errors: FieldErrors = {};
@@ -54,7 +60,8 @@ export default function ContactPage() {
     }
 
     if (phone.includes("@")) {
-      errors.phone = "Please enter a phone number, not an email address.";
+      errors.phone =
+        "Please enter a phone number, not an email address.";
     } else if (!/^[0-9+\-().\s]+$/.test(phone)) {
       errors.phone =
         "Phone numbers can only contain numbers, spaces, +, -, brackets and periods.";
@@ -72,11 +79,21 @@ export default function ContactPage() {
     }
 
     if (serviceAddress.length < 5) {
-      errors.serviceAddress = "Please enter the service address.";
+      errors.serviceAddress =
+        "Please enter the service address.";
     }
 
     if (!service) {
       errors.service = "Please select a service.";
+    }
+
+    if (!["Normal", "Urgent"].includes(urgency)) {
+      errors.urgency = "Please select the urgency.";
+    }
+
+    if (!["Phone", "Email"].includes(preferredContact)) {
+      errors.preferredContact =
+        "Please select your preferred contact method.";
     }
 
     if (message.length < 10) {
@@ -102,6 +119,8 @@ export default function ContactPage() {
           email,
           serviceAddress,
           service,
+          urgency,
+          preferredContact,
           message,
         }),
       });
@@ -124,7 +143,8 @@ export default function ContactPage() {
       }
 
       setSuccessMessage(
-        data.message ?? "Your service request has been submitted successfully."
+        data.message ??
+          "Your service request has been submitted successfully."
       );
 
       setRequestReference(data.requestReference ?? "");
@@ -143,7 +163,6 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* Contact Hero */}
       <section className="bg-gray-100">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className="mb-3 text-lg font-medium text-gray-700">
@@ -161,7 +180,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Form */}
       <section className="bg-white">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="max-w-2xl">
@@ -296,20 +314,102 @@ export default function ContactPage() {
                     Select a service
                   </option>
 
-                  <option value="Plumbing">Plumbing</option>
-                  <option value="Re-Pipes">Re-Pipes</option>
+                  <option value="Plumbing">
+                    Plumbing
+                  </option>
+
+                  <option value="Re-Pipes">
+                    Re-Pipes
+                  </option>
+
                   <option value="Hot Water Tanks">
                     Hot Water Tanks
                   </option>
-                  <option value="Boilers">Boilers</option>
-                  <option value="Drainage">Drainage</option>
-                  <option value="Backflows">Backflows</option>
-                  <option value="Inspections">Inspections</option>
+
+                  <option value="Boilers">
+                    Boilers
+                  </option>
+
+                  <option value="Drainage">
+                    Drainage
+                  </option>
+
+                  <option value="Backflows">
+                    Backflows
+                  </option>
+
+                  <option value="Inspections">
+                    Inspections
+                  </option>
                 </select>
 
                 {fieldErrors.service && (
                   <p className="mt-2 text-sm text-red-700">
                     {fieldErrors.service}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="urgency"
+                  className="block font-medium text-black"
+                >
+                  Urgency
+                </label>
+
+                <select
+                  id="urgency"
+                  name="urgency"
+                  defaultValue="Normal"
+                  className="mt-2 w-full rounded border border-gray-300 px-4 py-3 text-black"
+                >
+                  <option value="Normal">
+                    Normal
+                  </option>
+
+                  <option value="Urgent">
+                    Urgent
+                  </option>
+                </select>
+
+                {fieldErrors.urgency && (
+                  <p className="mt-2 text-sm text-red-700">
+                    {fieldErrors.urgency}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="preferredContact"
+                  className="block font-medium text-black"
+                >
+                  Preferred Contact
+                </label>
+
+                <select
+                  id="preferredContact"
+                  name="preferredContact"
+                  defaultValue=""
+                  className="mt-2 w-full rounded border border-gray-300 px-4 py-3 text-black"
+                >
+                  <option value="" disabled>
+                    Select a contact method
+                  </option>
+
+                  <option value="Phone">
+                    Phone
+                  </option>
+
+                  <option value="Email">
+                    Email
+                  </option>
+                </select>
+
+                {fieldErrors.preferredContact && (
+                  <p className="mt-2 text-sm text-red-700">
+                    {fieldErrors.preferredContact}
                   </p>
                 )}
               </div>
@@ -360,6 +460,11 @@ export default function ContactPage() {
                       Request reference: {requestReference}
                     </p>
                   )}
+
+                  <p className="mt-2 text-sm">
+                    ONeill Mechanical will review your request and
+                    contact you using the information provided.
+                  </p>
                 </div>
               )}
 

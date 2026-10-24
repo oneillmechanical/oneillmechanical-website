@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@azure/identity": "^4.14.0",
+    "@marsidev/react-turnstile": "^1.6.3",
     "@vercel/oidc": "^4.0.1",
     "next": "^16.4.2",
     "react": "19.2.8",
@@ -24,5 +24,10 @@
     "eslint-config-next": "^16.4.2",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+  "@vercel/cli-config": {
+    "zod": "4.6.7"
   }
+}
 }

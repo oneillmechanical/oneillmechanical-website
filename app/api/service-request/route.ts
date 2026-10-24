@@ -1,4 +1,3 @@
-import { ClientAssertionCredential } from "@azure/identity";
 import { getVercelOidcToken } from "@vercel/oidc";
 
 const SITE_ID =
@@ -17,19 +16,24 @@ const VALID_SERVICES = [
   "Inspections",
 ];
 
+const VALID_URGENCY = ["Normal", "Urgent"];
+
+const VALID_CONTACT_METHODS = ["Phone", "Email"];
+
 type ServiceRequestBody = {
   name?: unknown;
   phone?: unknown;
   email?: unknown;
   serviceAddress?: unknown;
   service?: unknown;
+  urgency?: unknown;
+  preferredContact?: unknown;
   message?: unknown;
 };
 
 function cleanText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
-
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -69,6 +73,8 @@ export async function POST(request: Request) {
     const email = cleanText(body.email).toLowerCase();
     const serviceAddress = cleanText(body.serviceAddress);
     const service = cleanText(body.service);
+    const urgency = cleanText(body.urgency);
+    const preferredContact = cleanText(body.preferredContact);
     const message = cleanText(body.message);
 
     if (!name) {
@@ -171,6 +177,28 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!VALID_URGENCY.includes(urgency)) {
+      return Response.json(
+        {
+          success: false,
+          field: "urgency",
+          error: "Please select a valid urgency.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!VALID_CONTACT_METHODS.includes(preferredContact)) {
+      return Response.json(
+        {
+          success: false,
+          field: "preferredContact",
+          error: "Please select a valid preferred contact method.",
+        },
+        { status: 400 }
+      );
+    }
+
     if (!message) {
       return Response.json(
         {
@@ -209,31 +237,46 @@ export async function POST(request: Request) {
       );
     }
 
-    const credential = new ClientAssertionCredential(
-      tenantId,
-      clientId,
-      () =>
-        getVercelOidcToken({
-          audience: "api://AzureADTokenExchange",
-        })
-    );
+const vercelAssertion = await getVercelOidcToken({
+  audience: "api://AzureADTokenExchange",
+});
 
-    const accessToken = await credential.getToken(
-      "https://graph.microsoft.com/.default"
-    );
+const tokenResponse = await fetch(
+  `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      client_id: clientId,
+      scope: "https://graph.microsoft.com/.default",
+      grant_type: "client_credentials",
+      client_assertion_type:
+        "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+      client_assertion: vercelAssertion,
+    }),
+  }
+);
 
-    if (!accessToken) {
-      console.error("Microsoft Graph access token was not returned.");
+const tokenResult = await tokenResponse.json();
 
-      return Response.json(
-        {
-          success: false,
-          error: "The service request could not be submitted.",
-        },
-        { status: 500 }
-      );
-    }
+if (!tokenResponse.ok || !tokenResult.access_token) {
+  console.error(
+    "Microsoft Entra token exchange failed:",
+    tokenResult
+  );
 
+  return Response.json(
+    {
+      success: false,
+      error: "The service request could not be submitted.",
+    },
+    { status: 500 }
+  );
+}
+
+    const accessToken = tokenResult.access_token;
     const requestReference = `WEB-${Date.now()}`;
     const title = `${requestReference} - ${name}`;
 
@@ -242,7 +285,7 @@ export async function POST(request: Request) {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken.token}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -255,9 +298,11 @@ export async function POST(request: Request) {
             ServiceType: service,
             RequestDescription: message,
             RequestStatus: "New",
-            RequestUrgency: "Normal",
+            RequestUrgency: urgency,
+            ContactPreference: preferredContact,
             NextAction: "Review new website service request",
-            InternalNotes: "Submitted through oneillmechanical.ca.",
+            InternalNotes:
+              "Submitted through oneillmechanical.ca.",
           },
         }),
       }
@@ -283,14 +328,18 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: true,
-        message: "Your service request has been submitted successfully.",
+        message:
+          "Your service request has been submitted successfully.",
         requestReference,
         itemId: result.id,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Service request submission failed:", error);
+    console.error(
+      "Service request submission failed:",
+      error
+    );
 
     return Response.json(
       {
