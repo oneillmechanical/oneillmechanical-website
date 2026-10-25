@@ -1,6 +1,10 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
+import {
+  Turnstile,
+  type TurnstileInstance,
+} from "@marsidev/react-turnstile";
 
 type FieldErrors = {
   name?: string;
@@ -11,6 +15,7 @@ type FieldErrors = {
   urgency?: string;
   preferredContact?: string;
   message?: string;
+  turnstile?: string;
 };
 
 type ApiResponse = {
@@ -21,8 +26,14 @@ type ApiResponse = {
   requestReference?: string;
 };
 
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
+
 export default function ContactPage() {
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -31,7 +42,6 @@ export default function ContactPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setIsSubmitting(true);
     setFieldErrors({});
     setFormError("");
     setSuccessMessage("");
@@ -101,11 +111,17 @@ export default function ContactPage() {
         "Please provide at least 10 characters describing the service you need.";
     }
 
+    if (!turnstileToken) {
+      errors.turnstile =
+        "Please complete the security verification.";
+    }
+
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      setIsSubmitting(false);
       return;
     }
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/service-request", {
@@ -122,6 +138,7 @@ export default function ContactPage() {
           urgency,
           preferredContact,
           message,
+          turnstileToken,
         }),
       });
 
@@ -139,6 +156,9 @@ export default function ContactPage() {
           );
         }
 
+        setTurnstileToken("");
+        turnstileRef.current?.reset();
+
         return;
       }
 
@@ -150,12 +170,17 @@ export default function ContactPage() {
       setRequestReference(data.requestReference ?? "");
 
       form.reset();
+      setTurnstileToken("");
+      turnstileRef.current?.reset();
     } catch (error) {
       console.error("Contact form submission failed:", error);
 
       setFormError(
         "Your service request could not be submitted. Please try again."
       );
+
+      setTurnstileToken("");
+      turnstileRef.current?.reset();
     } finally {
       setIsSubmitting(false);
     }
@@ -313,34 +338,15 @@ export default function ContactPage() {
                   <option value="" disabled>
                     Select a service
                   </option>
-
-                  <option value="Plumbing">
-                    Plumbing
-                  </option>
-
-                  <option value="Re-Pipes">
-                    Re-Pipes
-                  </option>
-
+                  <option value="Plumbing">Plumbing</option>
+                  <option value="Re-Pipes">Re-Pipes</option>
                   <option value="Hot Water Tanks">
                     Hot Water Tanks
                   </option>
-
-                  <option value="Boilers">
-                    Boilers
-                  </option>
-
-                  <option value="Drainage">
-                    Drainage
-                  </option>
-
-                  <option value="Backflows">
-                    Backflows
-                  </option>
-
-                  <option value="Inspections">
-                    Inspections
-                  </option>
+                  <option value="Boilers">Boilers</option>
+                  <option value="Drainage">Drainage</option>
+                  <option value="Backflows">Backflows</option>
+                  <option value="Inspections">Inspections</option>
                 </select>
 
                 {fieldErrors.service && (
@@ -364,13 +370,8 @@ export default function ContactPage() {
                   defaultValue="Normal"
                   className="mt-2 w-full rounded border border-gray-300 px-4 py-3 text-black"
                 >
-                  <option value="Normal">
-                    Normal
-                  </option>
-
-                  <option value="Urgent">
-                    Urgent
-                  </option>
+                  <option value="Normal">Normal</option>
+                  <option value="Urgent">Urgent</option>
                 </select>
 
                 {fieldErrors.urgency && (
@@ -397,14 +398,8 @@ export default function ContactPage() {
                   <option value="" disabled>
                     Select a contact method
                   </option>
-
-                  <option value="Phone">
-                    Phone
-                  </option>
-
-                  <option value="Email">
-                    Email
-                  </option>
+                  <option value="Phone">Phone</option>
+                  <option value="Email">Email</option>
                 </select>
 
                 {fieldErrors.preferredContact && (
@@ -433,6 +428,54 @@ export default function ContactPage() {
                 {fieldErrors.message && (
                   <p className="mt-2 text-sm text-red-700">
                     {fieldErrors.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <p className="mb-2 font-medium text-black">
+                  Security Verification
+                </p>
+
+                {TURNSTILE_SITE_KEY ? (
+                  <Turnstile
+                    ref={turnstileRef}
+                    siteKey={TURNSTILE_SITE_KEY}
+                    options={{
+                      theme: "light",
+                      size: "flexible",
+                      refreshExpired: "auto",
+                    }}
+                    onSuccess={(token) => {
+                      setTurnstileToken(token);
+
+                      setFieldErrors((current) => ({
+                        ...current,
+                        turnstile: undefined,
+                      }));
+                    }}
+                    onExpire={() => {
+                      setTurnstileToken("");
+                    }}
+                    onError={() => {
+                      setTurnstileToken("");
+
+                      setFieldErrors((current) => ({
+                        ...current,
+                        turnstile:
+                          "Security verification failed. Please try again.",
+                      }));
+                    }}
+                  />
+                ) : (
+                  <p className="text-sm text-red-700">
+                    Security verification is not configured.
+                  </p>
+                )}
+
+                {fieldErrors.turnstile && (
+                  <p className="mt-2 text-sm text-red-700">
+                    {fieldErrors.turnstile}
                   </p>
                 )}
               </div>
@@ -470,7 +513,11 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={
+                  isSubmitting ||
+                  !turnstileToken ||
+                  !TURNSTILE_SITE_KEY
+                }
                 className="rounded bg-gray-900 px-6 py-3 font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:bg-gray-500"
               >
                 {isSubmitting

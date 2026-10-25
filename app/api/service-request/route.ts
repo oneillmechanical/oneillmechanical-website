@@ -29,11 +29,30 @@ type ServiceRequestBody = {
   urgency?: unknown;
   preferredContact?: unknown;
   message?: unknown;
+  turnstileToken?: unknown;
+};
+
+type TurnstileVerificationResponse = {
+  success: boolean;
+  hostname?: string;
+  "error-codes"?: string[];
+};
+
+type EntraTokenResponse = {
+  access_token?: string;
+  error?: string;
+  error_description?: string;
+};
+
+type GraphResponse = {
+  id?: string;
+  error?: unknown;
 };
 
 function cleanText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
+
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -76,6 +95,7 @@ export async function POST(request: Request) {
     const urgency = cleanText(body.urgency);
     const preferredContact = cleanText(body.preferredContact);
     const message = cleanText(body.message);
+    const turnstileToken = cleanText(body.turnstileToken);
 
     if (!name) {
       return Response.json(
@@ -222,6 +242,92 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!turnstileToken) {
+      return Response.json(
+        {
+          success: false,
+          field: "turnstile",
+          error: "Please complete the security verification.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const turnstileSecretKey =
+      process.env.TURNSTILE_SECRET_KEY;
+
+    if (!turnstileSecretKey) {
+      console.error(
+        "TURNSTILE_SECRET_KEY environment variable is missing."
+      );
+
+      return Response.json(
+        {
+          success: false,
+          error: "The security verification system is not configured.",
+        },
+        { status: 500 }
+      );
+    }
+
+    const turnstileResponse = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: turnstileSecretKey,
+          response: turnstileToken,
+        }),
+      }
+    );
+
+    const turnstileResult =
+      (await turnstileResponse.json()) as TurnstileVerificationResponse;
+
+    if (!turnstileResponse.ok || !turnstileResult.success) {
+      console.error(
+        "Turnstile verification failed:",
+        turnstileResult["error-codes"] ?? []
+      );
+
+      return Response.json(
+        {
+          success: false,
+          field: "turnstile",
+          error:
+            "Security verification failed. Please complete the verification again.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const allowedHostnames = [
+      "oneillmechanical.ca",
+      "oneillmechanical-website.vercel.app",
+    ];
+
+    if (
+      !turnstileResult.hostname ||
+      !allowedHostnames.includes(turnstileResult.hostname)
+    ) {
+      console.error(
+        "Unexpected Turnstile hostname:",
+        turnstileResult.hostname
+      );
+
+      return Response.json(
+        {
+          success: false,
+          field: "turnstile",
+          error: "Security verification failed.",
+        },
+        { status: 400 }
+      );
+    }
+
     const tenantId = process.env.AZURE_TENANT_ID;
     const clientId = process.env.AZURE_CLIENT_ID;
 
@@ -237,46 +343,50 @@ export async function POST(request: Request) {
       );
     }
 
-const vercelAssertion = await getVercelOidcToken({
-  audience: "api://AzureADTokenExchange",
-});
+    const vercelAssertion = await getVercelOidcToken({
+      audience: "api://AzureADTokenExchange",
+    });
 
-const tokenResponse = await fetch(
-  `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      client_id: clientId,
-      scope: "https://graph.microsoft.com/.default",
-      grant_type: "client_credentials",
-      client_assertion_type:
-        "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-      client_assertion: vercelAssertion,
-    }),
-  }
-);
+    const tokenResponse = await fetch(
+      `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          client_id: clientId,
+          scope: "https://graph.microsoft.com/.default",
+          grant_type: "client_credentials",
+          client_assertion_type:
+            "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+          client_assertion: vercelAssertion,
+        }),
+      }
+    );
 
-const tokenResult = await tokenResponse.json();
+    const tokenResult =
+      (await tokenResponse.json()) as EntraTokenResponse;
 
-if (!tokenResponse.ok || !tokenResult.access_token) {
-  console.error(
-    "Microsoft Entra token exchange failed:",
-    tokenResult
-  );
+    if (!tokenResponse.ok || !tokenResult.access_token) {
+      console.error(
+        "Microsoft Entra token exchange failed:",
+        tokenResult.error,
+        tokenResult.error_description
+      );
 
-  return Response.json(
-    {
-      success: false,
-      error: "The service request could not be submitted.",
-    },
-    { status: 500 }
-  );
-}
+      return Response.json(
+        {
+          success: false,
+          error: "The service request could not be submitted.",
+        },
+        { status: 500 }
+      );
+    }
 
     const accessToken = tokenResult.access_token;
+
     const requestReference = `WEB-${Date.now()}`;
     const title = `${requestReference} - ${name}`;
 
@@ -300,7 +410,8 @@ if (!tokenResponse.ok || !tokenResult.access_token) {
             RequestStatus: "New",
             RequestUrgency: urgency,
             ContactPreference: preferredContact,
-            NextAction: "Review new website service request",
+            NextAction:
+              "Review new website service request",
             InternalNotes:
               "Submitted through oneillmechanical.ca.",
           },
@@ -308,12 +419,13 @@ if (!tokenResponse.ok || !tokenResult.access_token) {
       }
     );
 
-    const result = await graphResponse.json();
+    const result =
+      (await graphResponse.json()) as GraphResponse;
 
     if (!graphResponse.ok) {
       console.error(
         "SharePoint service request creation failed:",
-        result
+        result.error
       );
 
       return Response.json(
