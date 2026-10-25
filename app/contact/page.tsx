@@ -205,7 +205,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="bg-white">
+      <section id="request-service" className="scroll-mt-24 bg-white">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold text-black">
