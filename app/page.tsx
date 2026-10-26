@@ -88,13 +88,6 @@ export default function Home() {
 
           <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:gap-4">
             <Link
-              href="/contact#request-service"
-              className="inline-flex justify-center rounded-lg border border-[#17324D] bg-[#17324D] px-6 py-3 font-semibold text-white transition-colors duration-150 hover:border-[#2F6690] hover:bg-[#2F6690] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F6690] focus-visible:ring-offset-2"
-            >
-              Request Service
-            </Link>
-
-            <Link
               href="/services"
               className="inline-flex justify-center rounded-lg border border-[#CBD5E1] bg-white px-6 py-3 font-semibold text-[#17324D] transition-colors duration-150 hover:border-[#2F6690] hover:bg-[#EAF1F6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F6690] focus-visible:ring-offset-2"
             >
@@ -165,13 +158,6 @@ export default function Home() {
               className="inline-flex justify-center rounded-lg border border-[#CBD5E1] bg-white px-5 py-3 font-semibold text-[#17324D] transition-colors duration-150 hover:border-[#2F6690] hover:bg-[#EAF1F6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F6690] focus-visible:ring-offset-2"
             >
               About ONeill Mechanical
-            </Link>
-
-            <Link
-              href="/contact#request-service"
-              className="inline-flex justify-center rounded-lg border border-[#17324D] bg-[#17324D] px-5 py-3 font-semibold text-white transition-colors duration-150 hover:border-[#2F6690] hover:bg-[#2F6690] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F6690] focus-visible:ring-offset-2"
-            >
-              Request Service
             </Link>
           </div>
         </div>

@@ -17,8 +17,6 @@ export default function PlumbingPage() {
         "Pipe replacement",
         "Plumbing upgrades",
       ]}
-      requestTitle="Request Plumbing Service"
-      requestText="Provide the service address, contact information and a description of the plumbing work or problem. ONeill Mechanical will review the request and follow up using your preferred contact method."
     />
   );
 }
