@@ -11,9 +11,11 @@ const VALID_SERVICES = [
   "Re-Pipes",
   "Hot Water Tanks",
   "Boilers",
+  "Gas Services",
   "Drainage",
   "Backflows",
   "Inspections",
+  "Fixture Installation",
 ];
 
 const VALID_URGENCY = ["Normal", "Urgent"];
