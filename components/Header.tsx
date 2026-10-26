@@ -19,9 +19,9 @@ export default function Header() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="bg-[#F4F6F8] text-[#374151]">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 py-3 sm:gap-5 sm:py-4">
+    <header className="sticky top-0 z-50 bg-white/95 px-3 py-3 backdrop-blur-sm sm:px-4">
+      <div className="mx-auto max-w-6xl rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-3 shadow-sm sm:px-5">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-2 sm:gap-5 sm:py-3">
           <Link href="/" className="block shrink-0" onClick={closeMenu}>
             <Image
               src="/images/OM-LOGO-WEB-800.png"
@@ -29,7 +29,7 @@ export default function Header() {
               width={752}
               height={483}
               priority
-              className="h-auto w-24 object-contain sm:w-32 md:w-36"
+              className="h-auto w-20 object-contain sm:w-28 md:w-32"
             />
           </Link>
 
@@ -37,7 +37,7 @@ export default function Header() {
             <Link
               href="/contact#request-service"
               onClick={closeMenu}
-              className="rounded-lg border border-[#17324D] bg-[#17324D] px-3 py-2 text-center text-sm font-semibold text-white transition-colors duration-150 hover:border-[#2F6690] hover:bg-[#2F6690] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F6690] focus-visible:ring-offset-2 sm:px-5 sm:text-base"
+              className="rounded-lg border border-[#17324D] bg-[#17324D] px-3 py-2 text-center text-xs font-semibold text-white transition-colors duration-150 hover:border-[#2F6690] hover:bg-[#2F6690] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F6690] focus-visible:ring-offset-2 sm:px-5 sm:text-base"
             >
               Request Service
             </Link>
@@ -46,7 +46,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className={`${navButtonClass} md:hidden`}
+            className={`${navButtonClass} px-3 text-sm md:hidden`}
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
             aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -70,7 +70,7 @@ export default function Header() {
         {menuOpen && (
           <nav
             id="mobile-navigation"
-            className="border-t border-[#CBD5E1] pb-4 md:hidden"
+            className="border-t border-[#CBD5E1] pb-3 md:hidden"
             aria-label="Mobile navigation"
           >
             <ul className="grid gap-2 pt-3">
