@@ -19,52 +19,30 @@ const serviceIcons: Record<string, string> = {
   "Fixture Installation": "/images/OM-ICONS/fixtures.png",
 };
 
-export default function ServiceCard({
-  title,
-  description,
-  href,
-}: ServiceCardProps) {
+export default function ServiceCard({ title, description, href }: ServiceCardProps) {
   const icon = serviceIcons[title];
+  const cardClassName =
+    "group block h-full rounded-xl border border-[#405363] bg-[#263746] p-6 shadow-sm transition-colors duration-200 hover:border-[#3282B8] hover:bg-[#2D4253] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3282B8] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17212B]";
 
-  const cardContent = (
+  const content = (
     <>
       <div className="flex items-center gap-3">
         {icon && (
-          <Image
-            src={icon}
-            alt=""
-            width={52}
-            height={52}
-            className="h-13 w-13 shrink-0 object-contain"
-            aria-hidden="true"
-          />
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-[#E9EEF2] p-1.5">
+            <Image src={icon} alt="" width={48} height={48} className="h-12 w-12 object-contain" aria-hidden="true" />
+          </div>
         )}
-
-        <h3 className="text-xl font-semibold text-[#17324D] transition-colors duration-200 group-hover:text-[#2F6690]">
+        <h3 className="text-xl font-semibold text-[#F1F5F9] transition-colors duration-200 group-hover:text-white">
           {title}
         </h3>
       </div>
-
-      <p className="mt-4 leading-7 text-[#374151]">
-        {description}
-      </p>
-
-      <span className="mt-5 inline-flex font-semibold text-[#2F6690] transition-colors duration-200 group-hover:text-[#17324D]">
+      <p className="mt-4 leading-7 text-[#CBD5E1]">{description}</p>
+      <span className="mt-5 inline-flex font-semibold text-[#6CB6E8] transition-colors duration-200 group-hover:text-[#BFD7EA]">
         Learn More →
       </span>
     </>
   );
 
-  const cardClassName =
-    "group block h-full rounded-lg border border-[#CBD5E1] bg-[#F8FAFC] p-6 shadow-sm transition-colors duration-200 hover:border-[#2F6690] hover:bg-[#EAF1F6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2F6690] focus-visible:ring-offset-2";
-
-  if (!href) {
-    return <div className={cardClassName}>{cardContent}</div>;
-  }
-
-  return (
-    <Link href={href} className={cardClassName}>
-      {cardContent}
-    </Link>
-  );
+  if (!href) return <div className={cardClassName}>{content}</div>;
+  return <Link href={href} className={cardClassName}>{content}</Link>;
 }
