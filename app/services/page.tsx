@@ -1,4 +1,5 @@
 import ServiceCard from "../../components/ServiceCard";
+import PageIdentifier from "../../components/PageIdentifier";
 
 const services = [
   { title: "Plumbing", description: "Plumbing repairs, installations and service.", href: "/services/plumbing" },
@@ -14,35 +15,23 @@ const services = [
 
 export default function ServicesPage() {
   return (
-    <>
-      <section className="bg-[#F4F6F8]">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <p className="mb-3 text-base font-semibold text-[#2F6690] sm:text-lg">
-            ONeill Mechanical
-          </p>
-          <h1 className="text-4xl font-bold text-[#17324D] sm:text-5xl">
-            Services
-          </h1>
-          <p className="mt-5 max-w-2xl leading-7 text-[#374151] sm:text-lg">
+    <main className="bg-[#0F1720]">
+      <section className="border-b border-[#324554] bg-[#0F1720]">
+        <div className="mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-7">
+          <div className="mb-3"><PageIdentifier current="Services" /></div>
+          <h1 className="text-4xl font-bold text-[#F1F5F9] sm:text-5xl">Services</h1>
+          <p className="mt-5 max-w-2xl leading-7 text-[#CBD5E1] sm:text-lg">
             Explore our plumbing and mechanical services and select a service to learn more.
           </p>
         </div>
       </section>
-
-      <section className="bg-white">
+      <section className="bg-[#17212B]">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
-              <ServiceCard
-                key={service.href}
-                title={service.title}
-                description={service.description}
-                href={service.href}
-              />
-            ))}
+            {services.map((service) => <ServiceCard key={service.href} {...service} />)}
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 }
