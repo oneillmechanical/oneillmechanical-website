@@ -72,20 +72,27 @@ const reasons = [
 
 export default function Home() {
   return (
-    <main className="bg-[#0F1720]">
-      <section className="border-b border-[#324554] bg-[#0F1720]">
-        <div className="mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-7">
+    <main className="bg-[#E8EDF1] text-[#17324D]">
+      <section className="relative overflow-hidden border-b border-[#B7C5D0] bg-[#E8EDF1]">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-[0.40]"
+          style={{
+            backgroundImage: "url('/images/OM-technical-background.png')",
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-7">
           <div className="mb-4">
             <PageIdentifier current="Home" />
           </div>
 
           <div className="grid items-center gap-8 md:grid-cols-[1.05fr_0.95fr] md:gap-8 lg:gap-10">
-            <div>
-              <h1 className="text-3xl font-bold leading-tight text-[#F1F5F9] sm:text-4xl lg:whitespace-nowrap">
+            <div className="rounded-xl border border-[#AABAC6] bg-white/95 p-6 shadow-xl shadow-slate-900/10 backdrop-blur-[1px] sm:p-7">
+              <h1 className="text-3xl font-bold leading-tight text-[#17324D] sm:text-4xl lg:whitespace-nowrap">
                 Plumbing &amp; Mechanical Services
               </h1>
 
-              <p className="mt-5 max-w-2xl text-base leading-7 text-[#CBD5E1] sm:text-lg">
+              <p className="mt-5 max-w-2xl text-base leading-7 text-[#374B5C] sm:text-lg">
                 ONeill Mechanical provides plumbing and mechanical service
                 throughout Mission, Abbotsford and the Fraser Valley,
                 including plumbing repairs, re-pipes, hot water tanks,
@@ -93,22 +100,22 @@ export default function Home() {
                 fixture installation.
               </p>
 
-              <p className="mt-4 max-w-2xl leading-7 text-[#AFC0CE]">
+              <p className="mt-4 max-w-2xl leading-7 text-[#526879]">
                 Mission and Abbotsford are the primary service area, with
                 service available throughout the Fraser Valley and surrounding
                 Lower Mainland communities.
               </p>
 
-              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-[#CBD5E1] sm:text-base">
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-[#374B5C] sm:text-base">
                 <span className="inline-flex items-center gap-2">
-                  <span className="text-[#6CB6E8]" aria-hidden="true">
+                  <span className="text-[#2F7FAF]" aria-hidden="true">
                     ✓
                   </span>
                   Red Seal Plumber
                 </span>
 
                 <span className="inline-flex items-center gap-2">
-                  <span className="text-[#6CB6E8]" aria-hidden="true">
+                  <span className="text-[#2F7FAF]" aria-hidden="true">
                     ✓
                   </span>
                   Mission &amp; Abbotsford
@@ -116,7 +123,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-[#405363] bg-[#17212B] shadow-2xl shadow-black/30">
+            <div className="overflow-hidden rounded-xl border border-[#AABAC6] bg-[#F4F7F9] shadow-xl shadow-slate-900/10">
               <Image
                 src="/images/hppic01.png"
                 alt="Professional plumbing and mechanical equipment installation"
@@ -130,13 +137,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#17212B]">
+      <section className="bg-[#DCE4EA]">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <h2 className="text-3xl font-bold text-[#F1F5F9]">
+          <h2 className="text-3xl font-bold text-[#17324D]">
             Our Services
           </h2>
 
-          <p className="mt-3 max-w-2xl leading-7 text-[#CBD5E1]">
+          <p className="mt-3 max-w-2xl leading-7 text-[#374B5C]">
             Explore the plumbing and mechanical services offered by ONeill
             Mechanical.
           </p>
