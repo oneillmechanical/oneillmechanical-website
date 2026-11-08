@@ -49,7 +49,7 @@ export default function Header() {
             className="block shrink-0 rounded-lg bg-[#F8FAFC] p-2"
             onClick={closeMenu}>
             <Image
-              src="/images/OM-LOGO-WEB-800.png"
+              src="/images/logo-m-blue-red-transbg.png"
               alt="ONeill Mechanical"
               width={752}
               height={483}
