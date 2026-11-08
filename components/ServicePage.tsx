@@ -24,7 +24,14 @@ export default function ServicePage({ title, intro, overview, services }: Servic
         <div className="mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-7">
           <div className="mb-3"><PageIdentifier current={title} parent={{ label: "Services", href: "/services" }} /></div>
           <div className="flex items-center gap-4 sm:gap-5">
-            {icon && <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#E9EEF2] p-2 sm:h-24 sm:w-24"><Image src={icon} alt="" width={80} height={80} className="h-full w-full object-contain" aria-hidden="true" /></div>}
+            {icon && <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-[#E9EEF2] p-2 sm:h-24 sm:w-24"><Image
+                  src={icon}
+                  alt=""
+                  fill
+                  sizes="96px"
+                  className="object-contain p-2"
+                  aria-hidden="true"
+                /></div>}
             <h1 className="max-w-3xl text-4xl font-bold leading-tight text-[#F1F5F9] sm:text-5xl">{title}</h1>
           </div>
           <p className="mt-5 max-w-2xl text-base leading-7 text-[#CBD5E1] sm:text-lg">{intro}</p>
@@ -35,7 +42,14 @@ export default function ServicePage({ title, intro, overview, services }: Servic
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="max-w-3xl">
             <div className="flex items-center gap-3">
-              {icon && <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-[#E9EEF2] p-1.5"><Image src={icon} alt="" width={48} height={48} className="h-12 w-12 object-contain" aria-hidden="true" /></div>}
+              {icon && <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-[#E9EEF2] p-1.5"><Image
+                  src={icon}
+                  alt=""
+                  fill
+                  sizes="56px"
+                  className="object-contain p-1.5"
+                  aria-hidden="true"
+                /></div>}
               <h2 className="text-3xl font-bold text-[#F1F5F9]">{title} Services</h2>
             </div>
             {overview.map((paragraph) => <p key={paragraph} className="mt-4 leading-7 text-[#CBD5E1]">{paragraph}</p>)}

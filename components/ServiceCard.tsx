@@ -28,8 +28,8 @@ export default function ServiceCard({ title, description, href }: ServiceCardPro
     <>
       <div className="flex items-center gap-3">
         {icon && (
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-[#E9EEF2] p-1.5">
-            <Image src={icon} alt="" width={48} height={48} className="h-12 w-auto object-contain" aria-hidden="true" />
+          <div className="relative h-14 w-14 shrink-0 rounded-lg bg-[#E9EEF2]">
+            <Image src={icon} alt="" fill sizes="48px" className="object-contain p-1" aria-hidden="true"/>
           </div>
         )}
         <h3 className="text-xl font-semibold text-[#F1F5F9] transition-colors duration-200 group-hover:text-white">
