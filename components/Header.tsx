@@ -58,15 +58,19 @@ export default function Header() {
             />
           </Link>
 
-          <div className="flex justify-center">
-            <Link
-              href="/contact#request-service"
-              onClick={closeMenu}
-              className="rounded-lg border border-[#3282B8] bg-[#173B5F] px-3 py-2 text-center text-xs font-semibold text-white transition-colors duration-150 hover:bg-[#245C86] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6CB6E8] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17212B] sm:px-5 sm:text-base"
-            >
-              Request Service
-            </Link>
-          </div>
+              <div className="flex flex-col items-center justify-center">
+                <Link
+                  href="/contact#request-service"
+                  onClick={closeMenu}
+                  className="rounded-lg border border-[#3282B8] bg-[#173B5F] px-3 py-2 text-center text-xs font-semibold text-white transition-colors duration-150 hover:bg-[#245C86] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6CB6E8] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17212B] sm:px-5 sm:text-base"
+                >
+                  Request Service
+                </Link>
+
+                <span className="mt-5 text-[10px] font-semibold uppercase tracking-[0.20em] text-[#dce7ef] sm:text-xs">
+                  Residential <span aria-hidden="true">•</span> Commercial
+                </span>
+              </div>
 
           <button
             type="button"

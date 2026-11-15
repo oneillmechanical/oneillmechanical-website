@@ -13,24 +13,35 @@ export default function PageIdentifier({
   parent,
 }: PageIdentifierProps) {
   return (
-    <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#6CB6E8] sm:text-base">
+    <nav
+      aria-label="Breadcrumb"
+      className="inline-flex rounded-lg bg-white px-3 py-1.5 shadow-sm"
+    >
+      <ol className="flex items-center gap-2 text-sm font-medium text-[#2F7FAF]">
         {parent && (
           <>
             <li>
               <Link
                 href={parent.href}
-                className="transition-colors duration-150 hover:text-[#BFD7EA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3282B8] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1720]"
+                className="transition-colors duration-150 hover:text-[#17324D]"
               >
                 {parent.label}
               </Link>
             </li>
-            <li aria-hidden="true" className="text-[#64788A]">
+
+            <li
+              aria-hidden="true"
+              className="text-[#94A3B8]"
+            >
               /
             </li>
           </>
         )}
-        <li aria-current="page" className="text-[#6CB6E8]">
+
+        <li
+          aria-current="page"
+          className="text-[#2F7FAF]"
+        >
           {current}
         </li>
       </ol>
