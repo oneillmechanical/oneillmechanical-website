@@ -114,10 +114,9 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </div>
 
       {/* Featured common plumbing and mechanical work requests */}
-      <section className="border-t border-[#B7C5D0] bg-[#E8EDF1]">
+      <section className="relative">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="rounded-2xl border border-[#AABAC6] bg-white/85 p-5 shadow-xl shadow-slate-900/10 backdrop-blur-[2px] sm:p-7 lg:p-8">
             <div className="max-w-full">
@@ -197,6 +196,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
     </main>
   );
 }
