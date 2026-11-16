@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ServiceCard from "../components/ServiceCard";
 import PageIdentifier from "../components/PageIdentifier";
+import FeaturedWorkCard from "../components/FeaturedWorkCard";
 
 const services = [
   { title: "Plumbing", description: "Plumbing repairs, installations and service.", href: "/services/plumbing" },
@@ -115,38 +116,84 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Existing lower section retained for now */}
-      <section className="border-t border-[#324554] bg-[#1F2D3A]">
+      {/* Featured common plumbing and mechanical work requests */}
+      <section className="border-t border-[#B7C5D0] bg-[#E8EDF1]">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          <div className="max-w-3xl">
-            <p className="mb-3 text-base font-semibold text-[#6CB6E8] sm:text-lg">
-              Why ONeill Mechanical
-            </p>
-            <h2 className="text-3xl font-bold text-[#F1F5F9] sm:text-4xl">
-              Straightforward Service From First Contact
-            </h2>
-            <p className="mt-4 leading-7 text-[#CBD5E1]">
-              ONeill Mechanical is building a simple, organized service process that makes it easier
-              to request work, share the right information and keep track of each request.
-            </p>
-          </div>
+          <div className="rounded-2xl border border-[#AABAC6] bg-white/85 p-5 shadow-xl shadow-slate-900/10 backdrop-blur-[2px] sm:p-7 lg:p-8">
+            <div className="max-w-full">
+              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#2F7FAF]">
+                Featured Work
+              </p>
+              <h2 className="mt-2 text-3xl font-bold text-[#17324D] sm:text-4xl lg:whitespace-nowrap">
+                Featured Common Plumbing &amp; Mechanical Work Requests
+              </h2>
+              <p className="mt-4 max-w-full leading-7 text-[#374B5C]">
+                <span className="block">
+                  Residential plumbing services include Poly-B replacement and re-piping, leak repairs,
+                  fixture service, toilets, drains and other common household plumbing needs.
+                </span>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {reasons.map((reason) => (
-              <div key={reason.title} className="rounded-xl border border-[#405363] bg-[#263746] p-6 shadow-sm">
-                <h3 className="text-xl font-semibold text-[#F1F5F9]">{reason.title}</h3>
-                <p className="mt-3 leading-7 text-[#CBD5E1]">{reason.description}</p>
-              </div>
-            ))}
-          </div>
+                <span className="mt-1 block">
+                  Commercial mechanical services include hydronic heating, circulation and recirculation
+                  pumps, booster and sump pumps, boiler systems, hot-water baseboards and related equipment.
+                </span>
 
-          <div className="mt-8">
-            <Link
-              href="/about"
-              className="inline-flex justify-center rounded-lg border border-[#526879] bg-[#263746] px-5 py-3 font-semibold text-[#F1F5F9] transition-colors duration-150 hover:border-[#3282B8] hover:bg-[#2D4253] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3282B8] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1F2D3A]"
-            >
-              About ONeill Mechanical
-            </Link>
+                <span className="mt-1 block">
+                  ONeill Mechanical provides residential and commercial plumbing and mechanical service
+                  throughout Mission, Abbotsford and surrounding Fraser Valley communities.
+                </span>
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-3">
+              <FeaturedWorkCard
+                category="Residential"
+                title="Poly-B Re-Pipe & Leak Repair"
+                description="Assessment and replacement of aging Poly-B water-supply piping, including leak repairs, whole-home re-piping and planned plumbing-system upgrades."
+                image="/images/featured/featured-polyb.png"
+                items={[
+                  "Poly-B identification and assessment",
+                  "Poly-B pipe replacement",
+                  "Whole-home re-piping",
+                  "Water-line replacement",
+                  "Leak-related repairs",
+                  "Replacement planning",
+                ]}
+              />
+
+              <FeaturedWorkCard
+                category="Residential"
+                title="Plumbing Repairs & Fixture Service"
+                description="Troubleshooting and repair of common household plumbing problems, including leaking fixtures, toilets, drains, valves and related plumbing components."
+                image="/images/featured/featured-residential-service.png"
+                items={[
+                  "Leaking faucets and fixtures",
+                  "Toilet repairs and replacements",
+                  "Blocked sinks and drains",
+                  "Pipe and connection leaks",
+                  "Shutoff valve replacement",
+                  "Sump pump service",
+                  "General plumbing repairs",
+                ]}
+              />
+
+              <FeaturedWorkCard
+                category="Commercial"
+                title="Hydronic Heating & Mechanical Systems"
+                description="Commercial and multi-unit mechanical service involving hydronic heating, circulation, drainage and water-pressure equipment."
+                image="/images/featured/featured-commercial-mechanical.png"
+                items={[
+                  "Hydronic circulation pumps",
+                  "Hot-water recirculation pumps",
+                  "Booster pumps",
+                  "Sump pumps",
+                  "Boiler systems and controls",
+                  "Hot-water baseboard systems",
+                  "Zone valves and hydronic piping",
+                  "Expansion tanks and related equipment",
+                ]}
+              />
+            </div>
           </div>
         </div>
       </section>
