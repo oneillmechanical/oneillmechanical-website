@@ -11,7 +11,7 @@ const services = [
   { title: "Boilers", description: "Boiler, hydronic heating and hot-water baseboard installation, service and repair.", href: "/services/boilers" },
   { title: "Gas Services", description: "Gas piping, appliance connections and related gas services.", href: "/services/gas-services" },
   { title: "Drainage", description: "Drainage repairs, service and troubleshooting.", href: "/services/drainage" },
-  { title: "Backflows", description: "Backflow prevention services and testing.", href: "/services/backflows" },
+  { title: "Backflows", description: "Backflow testing, backflow preventer service, repairs and replacement.", href: "/services/backflows" },
   { title: "Inspections", description: "Plumbing and mechanical system inspections.", href: "/services/inspections" },
   { title: "Fixture Installation", description: "Installation and replacement of faucets, sinks, toilets and other plumbing fixtures.", href: "/services/fixture-installation" },
 ];
